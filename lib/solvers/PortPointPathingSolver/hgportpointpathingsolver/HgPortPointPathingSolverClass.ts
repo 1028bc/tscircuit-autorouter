@@ -127,7 +127,13 @@ export class HgPortPointPathingSolver extends HyperGraphSolver<
 
   override computeG(candidate: CandidateHg): number {
     const hgCandidate = candidate as CandidateHg
-    const baseCost = super.computeG(candidate)
+    let baseCost = super.computeG(candidate)
+    if (
+      hgCandidate.lastPort &&
+      hgCandidate.lastPort.d.z !== hgCandidate.port.d.z
+    ) {
+      baseCost += this.params.weights.LAYER_CHANGE_COST
+    }
     if (hgCandidate.nextRegion !== this.currentEndRegion) {
       return baseCost
     }
@@ -651,9 +657,7 @@ export class HgPortPointPathingSolver extends HyperGraphSolver<
     )
     const regionRipFraction = Math.min(1, regionRipCount / maxRegionRips)
     const startRippingPfThreshold =
-      this.params.weights.START_RIPPING_PF_THRESHOLD ||
-      this.params.weights.RIPPING_PF_THRESHOLD ||
-      0.3
+      this.params.weights.START_RIPPING_PF_THRESHOLD || 0.3
     const endRippingPfThreshold =
       this.params.weights.END_RIPPING_PF_THRESHOLD || 1
     const threshold =
