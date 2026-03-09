@@ -786,14 +786,19 @@ export class AssignableAutoroutingPipeline3 extends BaseSolver {
             netConnectionName ??
             connection.rootConnectionName ??
             connection.name,
-          route: convertHdRouteToSimplifiedRoute(hdRoute, this.srj.layerCount),
+          route: convertHdRouteToSimplifiedRoute(hdRoute, this.srj.layerCount).map(
+            (segment) =>
+              segment.route_type === "wire"
+                ? { ...segment, width: hdRoute.traceThickness ?? segment.width }
+                : segment
+          ),
         }
 
-        traces.push(simplifiedPcbTrace)
-      }
-    }
+            traces.push(simplifiedPcbTrace)
+          }
+        }
 
-    return traces
+        return traces
   }
 
   /**

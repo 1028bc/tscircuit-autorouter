@@ -73,6 +73,7 @@ export interface SimpleRouteConnection {
   isOffBoard?: boolean
   netConnectionName?: string
   nominalTraceWidth?: number
+  traceWidthMultiplier?: number // <-- ADD THIS LINE (Supports 2, 4, 8 multiples)
   pointsToConnect: Array<ConnectionPoint>
 
   /** @deprecated DO NOT USE **/
