@@ -101,12 +101,19 @@ export class TraceWidthSolver extends BaseSolver {
     this.connectionNominalTraceWidthMap = new Map()
 
     for (const connection of input.connection) {
-      if (connection.nominalTraceWidth === undefined) {
+      let effectiveWidth = connection.nominalTraceWidth
+
+      if (connection.traceWidthMultiplier !== undefined) {
+        const baseWidth = effectiveWidth ?? input.minTraceWidth
+        effectiveWidth = baseWidth * connection.traceWidthMultiplier
+      }
+
+      if (effectiveWidth === undefined) {
         continue
       }
       this.connectionNominalTraceWidthMap.set(
         connection.name,
-        connection.nominalTraceWidth,
+        effectiveWidth,
       )
     }
 
