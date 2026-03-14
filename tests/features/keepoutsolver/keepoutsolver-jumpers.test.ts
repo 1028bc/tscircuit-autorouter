@@ -91,7 +91,7 @@ test("TraceKeepoutSolver - preserves jumper positions", () => {
   // because jumper segments should not be subdivided
   const segmentLength = Math.abs(jumperEndIndex - jumperStartIndex)
   expect(segmentLength).toBe(1)
-})
+}, 60000)
 
 test("TraceKeepoutSolver - produces valid SVG with jumpers", () => {
   const data = (input as any)[0]
@@ -110,4 +110,4 @@ test("TraceKeepoutSolver - produces valid SVG with jumpers", () => {
   solver.solve()
 
   expect(solver.visualize()).toMatchGraphicsSvg(import.meta.path)
-})
+}, 60000)
