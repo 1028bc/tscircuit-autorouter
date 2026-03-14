@@ -15,7 +15,7 @@ test("bugreport23 - should not fail with null z property in port points", async 
       effort: 4,
     },
   )
-
+ 
   while (solver.getCurrentPhase() !== "portPointPathingSolver") {
     solver.step()
   }
