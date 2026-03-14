@@ -111,10 +111,7 @@ export class TraceWidthSolver extends BaseSolver {
       if (effectiveWidth === undefined) {
         continue
       }
-      this.connectionNominalTraceWidthMap.set(
-        connection.name,
-        effectiveWidth,
-      )
+      this.connectionNominalTraceWidthMap.set(connection.name, effectiveWidth)
     }
 
     if (this.obstacles.length > 0) {
