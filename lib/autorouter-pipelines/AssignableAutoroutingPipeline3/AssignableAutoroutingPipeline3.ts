@@ -280,11 +280,11 @@ export class AssignableAutoroutingPipeline3 extends BaseSolver {
               // SHUFFLE_SEED: 275,
               JUMPER_PF_FN_ENABLED: true,
               NODE_PF_FACTOR: 100,
-              MAX_RIPS: 100 * cms.effort,
+              MAX_RIPS: 40 * cms.effort,           // REDUCED: 100 -> 40
               RIPPING_ENABLED: true,
-              MAX_RIPPING_PF_THRESHOLD: 0.9,
+              MAX_RIPPING_PF_THRESHOLD: 0.75,      // REDUCED: 0.9 -> 0.75
               MIN_RIPPING_PF_THRESHOLD: 0.1,
-              RANDOM_RIP_FRACTION: 0.05,
+              RANDOM_RIP_FRACTION: 0.1,            // INCREASED: 0.05 -> 0.1
               NODE_PF_MAX_PENALTY: 1000,
               STRAIGHT_LINE_DEVIATION_PENALTY_FACTOR: 0,
               // MIN_ALLOWED_BOARD_SCORE: -1,
