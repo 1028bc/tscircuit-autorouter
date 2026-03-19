@@ -220,11 +220,11 @@ export function computeDrawPositionFromCollisions(
   // local maximum in each direction, then pick the better one.
   // Only consider reachable positions (paths that don't cross segments).
   const searchRange = keepoutRadius
-  
+
   // Instead of hardcoded 60:
   // Target 0.05mm resolution, but cap at 60 steps max
   const searchSteps = Math.min(60, Math.ceil(searchRange / 0.05))
- 
+
   // Sample clearance at each position
   const samples: Array<{
     pos: Point2D
