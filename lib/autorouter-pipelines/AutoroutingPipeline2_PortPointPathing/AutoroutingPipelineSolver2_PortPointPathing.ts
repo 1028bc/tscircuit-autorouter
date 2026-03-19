@@ -115,6 +115,7 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
   viaDiameter: number
   minTraceWidth: number
   effort: number
+  hyperParameters: any
 
   startTimeOfPhase: Record<string, number>
   endTimeOfPhase: Record<string, number>
@@ -286,7 +287,7 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
               STRAIGHT_LINE_DEVIATION_PENALTY_FACTOR: 4,
               // MAX_ITERATIONS_PER_PATH: 10e3,
             },
-          } as HyperPortPointPathingSolverParams,
+          } as any,
         ]
       },
     ),
@@ -350,6 +351,7 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
           colorMap: cms.colorMap,
           layerCount: cms.srj.layerCount,
           defaultViaDiameter: cms.viaDiameter,
+          traceWidth: cms.minTraceWidth,
         },
       ],
     ),
@@ -383,7 +385,7 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
       ]
     }),
   ]
-
+  
   constructor(
     public readonly srj: SimpleRouteJson,
     public readonly opts: CapacityMeshSolverOptions = {},
@@ -660,6 +662,12 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
 
       for (let i = 0; i < hdRoutes.length; i++) {
         const hdRoute = hdRoutes[i]
+        
+        // --- 1028bc INJECTED MULTIPLIER LOGIC ---
+        const origConnection = this.srj.connections.find((c) => c.name === connection.name);
+        const multiplier = (origConnection as any)?.traceWidthMultiplier ?? (hdRoute as any)?.traceWidthMultiplier ?? 1;
+        // ----------------------------------------
+
         const simplifiedPcbTrace: SimplifiedPcbTrace = {
           type: "pcb_trace",
           pcb_trace_id: `${connection.name}_${i}`,
@@ -667,7 +675,16 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
             netConnectionName ??
             connection.rootConnectionName ??
             connection.name,
-          route: convertHdRouteToSimplifiedRoute(hdRoute, this.srj.layerCount),
+          // --- MODIFIED ROUTE MAPPING ---
+          route: convertHdRouteToSimplifiedRoute(hdRoute, this.srj.layerCount).map((segment) =>
+            segment.route_type === "wire"
+              ? {
+                  ...segment,
+                  width: ((segment as any).width || this.minTraceWidth) * Math.max(multiplier, 0.1)
+                }
+              : segment
+          ),
+          // ------------------------------
         }
 
         traces.push(simplifiedPcbTrace)

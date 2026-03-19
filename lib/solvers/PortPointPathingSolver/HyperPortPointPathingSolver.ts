@@ -109,6 +109,11 @@ export class HyperPortPointPathingSolver extends HyperParameterSupervisorSolver<
   }
 
   generateSolver(hyperParameters: any): PortPointPathingSolver {
+    const mergedParams = {
+      ...this.params.hyperParameters,
+      ...hyperParameters,
+    }
+
     return new PortPointPathingSolver({
       simpleRouteJson: this.params.simpleRouteJson,
       capacityMeshNodes: this.params.capacityMeshNodes,
@@ -116,8 +121,7 @@ export class HyperPortPointPathingSolver extends HyperParameterSupervisorSolver<
       colorMap: this.params.colorMap,
       nodeMemoryPfMap: this.params.nodeMemoryPfMap,
       hyperParameters: {
-        ...this.params.hyperParameters,
-        ...hyperParameters,
+        ...mergedParams,
         MIN_ALLOWED_BOARD_SCORE:
           this.params.minAllowedBoardScore ??
           hyperParameters.MIN_ALLOWED_BOARD_SCORE ??
