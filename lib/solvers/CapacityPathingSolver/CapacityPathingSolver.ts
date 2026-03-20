@@ -225,6 +225,9 @@ export class CapacityPathingSolver extends BaseSolver {
     const usedCapacity =
       this.usedNodeCapacityMap.get(node.capacityMeshNodeId) ?? 0
     const totalCapacity = this.getTotalCapacity(node)
+    
+    // ANTIGRAVITY MANDATE: 10% Safety Buffer applied locally
+    const effective_limit = totalCapacity * 0.9
 
     // Single layer nodes can't safely have multiple traces because there's no
     // way to cross over two traces without a via
@@ -240,7 +243,7 @@ export class CapacityPathingSolver extends BaseSolver {
       additionalCapacityRequirement += 0.5
     }
 
-    return usedCapacity + additionalCapacityRequirement < totalCapacity
+    return usedCapacity + additionalCapacityRequirement < effective_limit
   }
 
   canTravelThroughObstacle(node: CapacityMeshNode, connectionName: string) {
