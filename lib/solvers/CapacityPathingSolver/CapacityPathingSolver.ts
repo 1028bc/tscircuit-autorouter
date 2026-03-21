@@ -225,7 +225,7 @@ export class CapacityPathingSolver extends BaseSolver {
     const usedCapacity =
       this.usedNodeCapacityMap.get(node.capacityMeshNodeId) ?? 0
     const totalCapacity = this.getTotalCapacity(node)
-    
+
     // ANTIGRAVITY MANDATE: 10% Safety Buffer applied locally
     const effective_limit = totalCapacity * 0.9
 

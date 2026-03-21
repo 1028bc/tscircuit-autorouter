@@ -13,6 +13,16 @@ test("bugreport23 - should not fail with null z property in port points", async 
     bugreport23 as unknown as SimpleRouteJson,
     {
       effort: 4,
+      hyperParameters: {
+        // Stop forcing traces into the tightest center point
+        FORCE_CENTER_FIRST: false,
+
+        // Heavily penalize reusing the same entry points
+        PORT_POINT_REUSE_FACTOR: 50000,
+
+        // Increase the penalty for getting too close to other things
+        NODE_PF_FACTOR: 500,
+      },
     },
   )
 
@@ -34,13 +44,13 @@ test("bugreport23 - should not fail with null z property in port points", async 
     ppps?.iterations,
     time(),
   )
-  // Print the board score after each activeSubSolver finishes
 
   const msppo = solver.multiSectionPortPointOptimizer
   if (msppo) {
     const ogViz = structuredClone(solver.portPointPathingSolver!.visualize())
     let bestScore = msppo!.computeBoardScore()
     console.log(0, bestScore.toFixed(2), kluer.red(msppo?.stats.errors))
+
     while (solver.getCurrentPhase() !== "highDensityRouteSolver") {
       solver.step()
       if (msppo?.activeSubSolver) {
