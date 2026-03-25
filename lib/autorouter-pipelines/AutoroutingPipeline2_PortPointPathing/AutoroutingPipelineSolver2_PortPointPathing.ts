@@ -394,7 +394,7 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
       ]
     }),
   ]
-  
+
   constructor(
     public readonly srj: SimpleRouteJson,
     public readonly opts: CapacityMeshSolverOptions = {},
@@ -671,10 +671,15 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
 
       for (let i = 0; i < hdRoutes.length; i++) {
         const hdRoute = hdRoutes[i]
-        
+
         // --- 1028bc INJECTED MULTIPLIER LOGIC ---
-        const origConnection = this.srj.connections.find((c) => c.name === connection.name);
-        const multiplier = (origConnection as any)?.traceWidthMultiplier ?? (hdRoute as any)?.traceWidthMultiplier ?? 1;
+        const origConnection = this.srj.connections.find(
+          (c) => c.name === connection.name,
+        )
+        const multiplier =
+          (origConnection as any)?.traceWidthMultiplier ??
+          (hdRoute as any)?.traceWidthMultiplier ??
+          1
         // ----------------------------------------
 
         const simplifiedPcbTrace: SimplifiedPcbTrace = {
@@ -685,13 +690,18 @@ export class AutoroutingPipelineSolver2_PortPointPathing extends BaseSolver {
             connection.rootConnectionName ??
             connection.name,
           // --- MODIFIED ROUTE MAPPING ---
-          route: convertHdRouteToSimplifiedRoute(hdRoute, this.srj.layerCount).map((segment) =>
+          route: convertHdRouteToSimplifiedRoute(
+            hdRoute,
+            this.srj.layerCount,
+          ).map((segment) =>
             segment.route_type === "wire"
               ? {
                   ...segment,
-                  width: ((segment as any).width || this.minTraceWidth) * Math.max(multiplier, 0.1)
+                  width:
+                    ((segment as any).width || this.minTraceWidth) *
+                    Math.max(multiplier, 0.1),
                 }
-              : segment
+              : segment,
           ),
           // ------------------------------
         }
